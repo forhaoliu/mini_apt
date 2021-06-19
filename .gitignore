@@ -200,8 +200,6 @@ dmypy.json
 
 ## misc
 logs/
-atari_training_code/
-dmc_training_code/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,jupyternotebooks,python,vscode
 
