@@ -12,4 +12,4 @@ Run `python train.py --env_name space_invaders`
 - [ ] include hyperparameter setting as config
 - [ ] yaml for requirement
 - [ ] reward plotter
-- [ ] double q learning
+- [ ] port rest of tf code here

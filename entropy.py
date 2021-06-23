@@ -32,15 +32,17 @@ def compute_apt_reward(source, target, args):
     reward, _ = sim_matrix.topk(args.knn_k, dim=1, largest=False, sorted=True)  # (b1, k)
 
     if not args.knn_avg:  # only keep k-th nearest neighbor
-        reward = reward[:, 0]
+        reward = reward[:, -1]
         reward = reward.reshape(-1, 1)  # (b1, 1)
-        moving_mean, moving_std = rms(reward)
-        reward = reward / moving_std
+        if args.rms:
+            moving_mean, moving_std = rms(reward)
+            reward = reward / moving_std
         reward = torch.maximum(reward - args.knn_clip, torch.zeros_like(reward).to(device))  # (b1, )
     else:  # average over all k nearest neighbors
         reward = reward.reshape(-1, 1)  # (b1 * k, 1)
-        moving_mean, moving_std = rms(reward)
-        reward = reward / moving_std
+        if args.rms:
+            moving_mean, moving_std = rms(reward)
+            reward = reward / moving_std
         reward = torch.maximum(reward - args.knn_clip, torch.zeros_like(reward).to(device))
         reward = reward.reshape((b1, args.knn_k))  # (b1, k)
         reward = reward.mean(dim=1)  # (b1,)

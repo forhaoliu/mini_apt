@@ -43,13 +43,13 @@ if __name__ == "__main__":
     parser.add_argument("--aug", action="store_true")
     # entropy
     parser.add_argument("--knn_avg", action="store_true")
+    parser.add_argument("--rms", action="store_true")
     parser.add_argument("--knn_k", type=int, default=16)
     parser.add_argument("--knn_bs", default=2048, type=int)
     parser.add_argument("--knn_clip", default=0.0005, type=float)
     parser.add_argument("--tgt", default="same", type=str, choices=["same", "neg"])
-    parser.add_argument("--enc", default="rnd", type=str, choices=["rnd", "rwf"])
-    parser.add_argument("--embed_hs", type=int, default=256)
-    parser.add_argument("--embed_os", type=int, default=50)
+    parser.add_argument("--enc", default="random", type=str, choices=["random", "contrastive"])
+    parser.add_argument("--embed_os", type=int, default=256)
     args = parser.parse_args()
 
     torch.backends.cudnn.benchmark = True

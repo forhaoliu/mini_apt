@@ -17,7 +17,7 @@ class Algo(object):
         self.critic_target = Critic(args).to(device).eval()
         hard_update(self.critic_target, self.critic)
         grad_false(self.critic_target)
-        self.state_encoder = RndEncoder(args).to(device) if args.enc == "rnd" else self.critic.encoder
+        self.state_encoder = RndEncoder(args).to(device) if args.enc == "random" else self.critic.encoder
         self.action_range = args.action_range
         self.total_it = 0
 
@@ -65,6 +65,10 @@ class Algo(object):
 
         if self.total_it % args.target_update_freq == 0:
             soft_update(self.critic_target, self.critic, args.tau)
+
+    def train_repr(self, state):
+        # todo: port tf representation learning code here
+        pass
 
     def save(self, model_dir, t, args):
         torch.save(self.critic.state_dict(), os.path.join(model_dir, f"critic_{t}.pth"))
