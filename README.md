@@ -13,4 +13,8 @@ Run `python train.py --env_name breakout --batch_size 64 --rainbow_conv --aug --
 - [ ] include hyperparameter setting as config file
 - [ ] requirement file
 - [ ] reward plotter
-- [ ] compare against tf code
+- [x] port out code on Atari
+- [ ] port out code on DMC
+
+### Contact
+hao.liu@cs.berkeley.edu
