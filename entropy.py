@@ -30,20 +30,15 @@ def compute_apt_reward(source, target, args):
     # (b1, 1, c) - (1, b2, c) -> (b1, 1, c) - (1, b2, c) -> (b1, b2, c) -> (b1, b2)
     sim_matrix = torch.norm(source[:, None, :].view(b1, 1, -1) - target[None, :, :].view(1, b2, -1), dim=-1, p=2)
     reward, _ = sim_matrix.topk(args.knn_k, dim=1, largest=False, sorted=True)  # (b1, k)
-
     if not args.knn_avg:  # only keep k-th nearest neighbor
         reward = reward[:, -1]
         reward = reward.reshape(-1, 1)  # (b1, 1)
-        if args.rms:
-            moving_mean, moving_std = rms(reward)
-            reward = reward / moving_std
-        reward = torch.maximum(reward - args.knn_clip, torch.zeros_like(reward).to(device))  # (b1, )
+        reward /= rms(reward)[1] if args.knn_rms else 1.0
+        reward = torch.maximum(reward - args.knn_clip, torch.zeros_like(reward).to(device)) if args.knn_clip >= 0.0 else reward  # (b1, )
     else:  # average over all k nearest neighbors
         reward = reward.reshape(-1, 1)  # (b1 * k, 1)
-        if args.rms:
-            moving_mean, moving_std = rms(reward)
-            reward = reward / moving_std
-        reward = torch.maximum(reward - args.knn_clip, torch.zeros_like(reward).to(device))
+        reward /= rms(reward)[1] if args.knn_rms else 1.0
+        reward = torch.maximum(reward - args.knn_clip, torch.zeros_like(reward).to(device)) if args.knn_clip >= 0.0 else reward
         reward = reward.reshape((b1, args.knn_k))  # (b1, k)
         reward = reward.mean(dim=1)  # (b1,)
     reward = torch.log(reward + 1.0)

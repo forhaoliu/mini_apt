@@ -1,8 +1,9 @@
-import atari_py
 import collections
 import random
-import torch
+
+import atari_py
 import cv2
+import torch
 
 
 class AtariEnv:
@@ -38,8 +39,8 @@ class AtariEnv:
         cv2.destroyAllWindows()
 
     def _get_state(self):
-        state = cv2.resize(self.ale.getScreenGrayscale(), (84, 84), interpolation=cv2.INTER_LINEAR)  # TODO: rlpyt uses nearest
-        return torch.tensor(state, dtype=torch.float32)
+        state = cv2.resize(self.ale.getScreenGrayscale(), (84, 84), interpolation=cv2.INTER_LINEAR)
+        return torch.tensor(state, dtype=torch.float32).div_(255)
 
     def _reset_buffer(self):
         for _ in range(self.frame_stack):
@@ -83,12 +84,9 @@ class AtariEnv:
             self.lives = lives
         return torch.stack(list(self.state_buffer), 0), reward, done, done
 
-    def action_space(self):
-        return len(self.actions)
-
     @property
     def action_num(self):
-        return self.action_space()
+        return len(self.actions)
 
 
 def make_env(args, evaluate=False):
