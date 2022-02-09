@@ -1,3 +1,6 @@
+## Note: please check out [URLB codebase](https://github.com/rll-research/url_benchmark) for most up-to-date and improved implementation. This repo is no longer actively maintained.
+------
+
 Author's code for reproducing experiments in [Behavior from the void: unsupervised active pre-training](https://arxiv.org/abs/2103.04551).
 It consists of unsupervised pretraining in single Atari environment, and subsequently adapt to downstream reward function.
 
